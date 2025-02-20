@@ -5,7 +5,6 @@ __pycache__/
 *takeout*
 db/
 documents
-assets/
 workflow/
 get_training_data.py
 notes.md
