@@ -6,3 +6,7 @@ __pycache__/
 db/
 documents
 assets/
+workflow/
+get_training_data.py
+notes.md
+environment.yml
