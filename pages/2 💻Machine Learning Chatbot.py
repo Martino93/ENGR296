@@ -6,7 +6,6 @@ from config.helper import create_columns
 from ai_agents.ml_agent.ollama_agent import chatbot
 
 
-
 st.set_page_config(layout="wide")
 
 
@@ -41,19 +40,12 @@ def display_ml_breast_cancer_model():
     st.html(html_content)
 
 
-
-
-
 # PAGE CONTENTS
 
 header()
 
 
-def col2():
-    chatbot()
-
-
 create_columns(
     lambda: display_ml_breast_cancer_model(),
-    lambda: col2(),
+    lambda: chatbot(),
 )

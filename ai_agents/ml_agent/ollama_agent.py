@@ -20,9 +20,8 @@ from langchain import hub
 from streamlit_chat import message
 
 
-
 def chatbot():
-    
+
     st.header("ML Chatbot")
 
     prompt = hub.pull("rlm/rag-prompt")
@@ -37,19 +36,17 @@ def chatbot():
         vector_db_name, embeddings=embeddings, allow_dangerous_deserialization=True
     )
 
-
-    retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
-
+    retriever = vector_store.as_retriever(
+        search_type="similarity", search_kwargs={"k": 3}
+    )
 
     llm = ChatOllama(
         model="llama3",
         base_url="http://localhost:11434",
     )
 
-
     def format_docs(docs):
         return "\n\n".join([doc.page_content for doc in docs])
-
 
     rag_chain = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
@@ -59,7 +56,7 @@ def chatbot():
     )
 
     question = st.text_input("Prompt", placeholder="Ask me anything...")
-    
+
     if question:
         response = rag_chain.invoke(question)
         message(question, is_user=True)

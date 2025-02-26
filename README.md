@@ -11,4 +11,5 @@ streamlit run HOME.py
 
 #TODO:
 - [x] Fix Machine Learning Chatbot Page
-- [ ] Add Chatbot to the Machine Learning Page
+- [x] Add Chatbot to the Machine Learning Page
+- [ ] Add sample questions to SQL agent
