@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,40 +17,50 @@ from langchain_community.document_loaders.html import UnstructuredHTMLLoader
 
 from langchain import hub
 
-prompt = hub.pull("rlm/rag-prompt")
-
-embeddings = OllamaEmbeddings(
-    model="nomic-embed-text", base_url="http://localhost:11434"
-)
-
-vector_db_name = "db/FAISS/cs235_project"
-
-vector_store = FAISS.load_local(
-    vector_db_name, embeddings=embeddings, allow_dangerous_deserialization=True
-)
+from streamlit_chat import message
 
 
-retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+
+def chatbot():
+    
+    st.header("ML Chatbot")
+
+    prompt = hub.pull("rlm/rag-prompt")
+
+    embeddings = OllamaEmbeddings(
+        model="nomic-embed-text", base_url="http://localhost:11434"
+    )
+
+    vector_db_name = "db/FAISS/cs235_project"
+
+    vector_store = FAISS.load_local(
+        vector_db_name, embeddings=embeddings, allow_dangerous_deserialization=True
+    )
 
 
-llm = ChatOllama(
-    model="llama3",
-    base_url="http://localhost:11434",
-)
+    retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
 
-def format_docs(docs):
-    return "\n\n".join([doc.page_content for doc in docs])
+    llm = ChatOllama(
+        model="llama3",
+        base_url="http://localhost:11434",
+    )
 
 
-rag_chain = (
-    {"context": retriever | format_docs, "question": RunnablePassthrough()}
-    | prompt
-    | llm
-    | StrOutputParser()
-)
+    def format_docs(docs):
+        return "\n\n".join([doc.page_content for doc in docs])
 
-question = "what was the highest F1 score obtained in Phase 1 of the project?"
 
-response = rag_chain.invoke(question)
-print(response)
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+
+    question = st.text_input("Prompt", placeholder="Ask me anything...")
+    
+    if question:
+        response = rag_chain.invoke(question)
+        message(question, is_user=True)
+        message(response, is_user=False)

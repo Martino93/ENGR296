@@ -3,9 +3,8 @@ from streamlit.components.v1 import html
 
 from config.helper import create_columns
 
+from ai_agents.ml_agent.ollama_agent import chatbot
 
-# get analytics contents from analytics.py
-from analytics import analyze_heart_failure_data
 
 
 st.set_page_config(layout="wide")
@@ -16,6 +15,15 @@ def header():
     st.info(
         """Here we display relevant machine learning analytics.
             See the data dictionary for more information on the datasets used.
+            
+        Instructions
+        
+        Here we can ask questions to the chatbot which will then retrieve information from the text embeddings located in a local vector database.
+        
+        Sample questions:
+        - what data mining techniques were used?
+        - what dataset was used for this project?
+        - what were the diagnosis Class Counts?
             """
     )
 
@@ -25,19 +33,27 @@ def header():
 
 def display_ml_breast_cancer_model():
 
-    cs235_page = "Models/rona_antonio_mohamed_martino_cs235_phase_1.html"
+    cs235_page = "Models/cs235_phase_1.html"
 
     with open(cs235_page, "r") as f:
         html_content = f.read()
 
-    html(html_content, height=84000)
+    st.html(html_content)
+
+
+
 
 
 # PAGE CONTENTS
 
 header()
 
+
+def col2():
+    chatbot()
+
+
 create_columns(
     lambda: display_ml_breast_cancer_model(),
-    lambda: st.image("assets/heart-pulse-svgrepo-com.svg", width=100),
+    lambda: col2(),
 )
