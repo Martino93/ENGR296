@@ -47,7 +47,7 @@ def query_bot(llm_model="OpenAI"):
     if llm_model == "OpenAI":
 
         # run agent
-        model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+        model = ChatOpenAI(model="gpt-4o", temperature=0)
         toolkit = SQLDatabaseToolkit(db=DB, llm=model)
         sql_agent = create_sql_agent(toolkit=toolkit, llm=model, verbose=True)
 
@@ -69,7 +69,7 @@ def query_bot(llm_model="OpenAI"):
             reasoning_text = clean_reasoning_text(reasoning_text)
 
             st.write(response)
-            st.code(reasoning_text)
+            st.code(reasoning_text, wrap_lines=True)
 
 
 def db_size():
